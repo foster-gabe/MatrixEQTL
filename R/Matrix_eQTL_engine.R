@@ -1203,6 +1203,14 @@ Matrix_eQTL_main = function(
                         noFDRsaveMemory = FALSE){
     ########################## Basic variable checks ##########################
     {
+        if(!is.null(output_file_name.cis))
+            if(nchar(output_file_name.cis)==0)
+                output_file_name.cis = NULL;
+        
+        if(!is.null(output_file_name))
+            if(nchar(output_file_name)==0)
+                output_file_name = NULL;
+        
         # status("Performing basic checks of the input variables");
         stopifnot( "SlicedData" %in% class(gene) );
         stopifnot( any(c("SlicedData","SlicedData.fmt") %in% class(snps)) );
