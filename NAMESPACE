@@ -30,12 +30,12 @@ exportMethods(
     "colSums"
 )
 
-importFrom("graphics",
-              "abline", "legend", "lines",
-              "par", "plot", "points", "title")
-importFrom("methods",
-              "new", "setRefClass")
-importFrom("stats",
-              "complete.cases", "pf", "pt", "qf", "qt")
-importFrom("utils",
-              "tail", "tail.matrix")
+importFrom( "graphics",
+            "abline", "legend", "lines",
+            "par", "plot", "points", "title")
+importFrom( "methods",
+            "new", "setRefClass", "is")
+importFrom( "stats",
+            "complete.cases", "pf", "pt", "qf", "qt")
+importFrom( "utils",
+            "tail", "tail.matrix")

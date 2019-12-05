@@ -42,7 +42,7 @@ SlicedData = setRefClass("SlicedData",
             return(invisible(.self));
         },
         CreateFromMatrix = function( mat ){
-            stopifnot( class(mat) == "matrix" );
+            stopifnot( is(mat, "matrix") );
             setSliceRaw( 1L ,mat );
             rns = rownames( mat, do.NULL = FALSE);
             rowNameSlices <<- list(rns);
@@ -624,7 +624,7 @@ setMethod(
     f = "colnames<-",
     signature = "SlicedData",
     function(x,value){
-        stopifnot( class(value) == "character" );
+        stopifnot( is.character(value) );
         stopifnot( length(value) == x$nCols() );
         x$columnNames = value;
         return(x);
@@ -634,7 +634,7 @@ setMethod(
     f = "rownames<-",
     signature = "SlicedData",
     function(x,value){
-        stopifnot( class(value) == "character" );
+        stopifnot( is.character(value) );
         stopifnot( length(value) == x$nRows() );
         start = 1;
         newNameSlices = vector("list", x$nSlices());
@@ -888,7 +888,7 @@ setMethod(
             testfun1 <<- list(testfun);
             pvfun1 <<- list(pvfun);
             if(length(filename) > 0){
-                if(class(filename) == "character"){
+                if( is.character(filename) ){
                     fid <<- list(file(
                                     description = filename,
                                     open = "wt",
@@ -1026,7 +1026,7 @@ setMethod(
         },
         start = function(filename, statistic_name, snps, gene, testfun, pvfun){
             # I hope the program stops if it fails to open the file
-            if(class(filename) == "character"){
+            if( is.character(filename) ){
                 fid <<- list(file(
                             description = filename,
                             open = "wt",
@@ -1212,9 +1212,9 @@ Matrix_eQTL_main = function(
                 output_file_name = NULL;
         
         # status("Performing basic checks of the input variables");
-        stopifnot( "SlicedData" %in% class(gene) );
-        stopifnot( any(c("SlicedData","SlicedData.fmt") %in% class(snps)) );
-        stopifnot( "SlicedData" %in% class(cvrt) );
+        stopifnot( is(gene, "SlicedData") );
+        stopifnot( is(snps, "SlicedData") );
+        stopifnot( is(cvrt, "SlicedData") );
         
         # Check dimensions
         if( min(snps$nRows(),snps$nCols()) == 0 )
@@ -1229,24 +1229,24 @@ Matrix_eQTL_main = function(
                 stop("Wrong number of samples in the matrix of covariates");
         }
 
-        stopifnot( class(pvOutputThreshold) == "numeric" );
+        stopifnot( is(pvOutputThreshold, "numeric") );
         stopifnot( length(pvOutputThreshold) == 1 );
         stopifnot( pvOutputThreshold >= 0 );
         stopifnot( pvOutputThreshold <= 1 );
 
-        stopifnot(  class(noFDRsaveMemory) == "logical" );
+        stopifnot( is(noFDRsaveMemory, "logical") );
         stopifnot( length(noFDRsaveMemory) == 1 );
 
         if( pvOutputThreshold > 0 ){
             stopifnot( !((length(output_file_name) == 0) && noFDRsaveMemory) );
             stopifnot( length(output_file_name) <= 1 );
             if( length(output_file_name) == 1 ){
-                stopifnot(  class(output_file_name) %in% 
-                            c("character","connection") );
+                stopifnot( any( class(output_file_name) %in% 
+                            c("character","connection") ) );
             }
         }
         
-        stopifnot( class(pvOutputThreshold.cis) == "numeric" );
+        stopifnot( is(pvOutputThreshold.cis, "numeric") );
         stopifnot( length(pvOutputThreshold.cis) == 1 );
         stopifnot( pvOutputThreshold.cis >= 0 );
         stopifnot( pvOutputThreshold.cis <= 1 );
@@ -1255,7 +1255,7 @@ Matrix_eQTL_main = function(
                     (pvOutputThreshold <= pvOutputThreshold.cis));
         stopifnot( (pvOutputThreshold > 0) | (pvOutputThreshold.cis > 0) );
 
-        stopifnot( class(useModel) == class(modelLINEAR) );
+        stopifnot( is(useModel, class(modelLINEAR)) );
         stopifnot( length(useModel) == 1 );
         stopifnot( useModel %in% c(modelLINEAR, modelANOVA, modelLINEAR_CROSS));
         if( useModel %in%  c(modelLINEAR, modelLINEAR_CROSS) ){
@@ -1280,30 +1280,30 @@ Matrix_eQTL_main = function(
             }
         }
         
-        stopifnot(  class(verbose) == "logical" );
+        stopifnot( is(verbose, "logical") );
         stopifnot( length(verbose) == 1 );
 
-        stopifnot(  class(min.pv.by.genesnp) == "logical" );
+        stopifnot( is(min.pv.by.genesnp, "logical") );
         stopifnot( length(min.pv.by.genesnp) == 1 );
     
         if( pvOutputThreshold.cis > 0 ){
             stopifnot( (length(output_file_name.cis) > 0) || !noFDRsaveMemory );
             stopifnot( length(output_file_name.cis) <= 1 );
             if( length(output_file_name.cis) == 1 ){
-                stopifnot( class(output_file_name.cis) %in%
-                            c("character","connection") );
+                stopifnot( any( class(output_file_name.cis) %in%
+                            c("character","connection") ) );
             }
 
-            stopifnot( class(snpspos) == "data.frame" );
+            stopifnot( is(snpspos, "data.frame") );
             stopifnot( ncol(snpspos) == 3 );
             stopifnot( nrow(snpspos) > 0 );
-            stopifnot( class(snpspos[[3]]) %in% c("integer", "numeric") );
+            stopifnot( is.numeric(snpspos[[3]]) );
             stopifnot( !any(is.na(snpspos[,3])) );
-            stopifnot( class(genepos) == "data.frame" );
+            stopifnot( is(genepos, "data.frame") );
             stopifnot( ncol(genepos) == 4 );
             stopifnot( nrow(genepos) > 0 );
-            stopifnot( class(genepos[[3]]) %in% c("integer", "numeric") );
-            stopifnot( class(genepos[[4]]) %in% c("integer", "numeric") );
+            stopifnot( is.numeric(genepos[[3]]) );
+            stopifnot( is.numeric(genepos[[4]]) );
             stopifnot( !any(is.na(genepos[[3]])) );
             stopifnot( !any(is.na(genepos[[4]])) );
             stopifnot( nzchar(output_file_name.cis) );
@@ -1312,12 +1312,12 @@ Matrix_eQTL_main = function(
         if( pvOutputThreshold > 0 )
             stopifnot( nzchar(output_file_name) );
         
-        stopifnot( class(errorCovariance) %in% c("numeric", "matrix") );
+        stopifnot( is.numeric(errorCovariance) );
         errorCovariance = as.matrix(errorCovariance);
-        if(length(errorCovariance)>0){
+        if( length(errorCovariance) > 0 ){
             if( nrow(errorCovariance) != ncol(errorCovariance) ){
                 stop("The covariance matrix is not square");
-            }    
+            }
             if( nrow(errorCovariance) != snps$nCols() ){
                 stop("The covariance matrix size",
                     " does not match the number of samples");
