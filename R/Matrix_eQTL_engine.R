@@ -1519,8 +1519,8 @@ Matrix_eQTL_main = function(
         # Orthonormalize covariates
         # status("Orthonormalizing covariates");
         q = qr(t(cvrt));
-        if( min(abs(diag(qr.R(q)))) < .Machine$double.eps * snps$nCols() ){
-            stop("Colinear or zero covariates detected");
+        #if( min(abs(diag(qr.R(q)))) < .Machine$double.eps * snps$nCols() ){
+        #    stop("Colinear or zero covariates detected");
         }
         cvrt = t( qr.Q(q) );
         rm(q);
